@@ -66,7 +66,7 @@ class DragDrop(tk.Canvas):
             
             for file_path in files:
                 folder_path = 'C:/Users/krist/OneDrive/Desktop/Report/uploads'
-                read_files.read_files_in_folder(folder_path)
+            read_files.read_files_in_folder(folder_path)
 
 class startGUI:
     def __init__(self, master, show_frame):
