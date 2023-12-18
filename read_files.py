@@ -107,14 +107,38 @@ def write_to_db(data, mycursor):
         print(mycursor.rowcount, "was inserted.")
     else:
         print('the flight number already exists')
-        
+    
+    #fill the Failure table
+    
+    field = 0
+    fail = []
+    while field < len(data):
+        print(data[field])
+        if data[field] == 'Failures':
+            fail.append(data[field+3])
+            fcd= data[field+3]
+            fail.append(data[field+5])
+            fail.append(data[field+7])
+        field+=1
+    
+    if code_check(fcd, mycursor) == 0:
+        sql = f"INSERT INTO failure values ( %s, %s, %s )"
+        mycursor.execute(sql, fail)
+    else:
+        print("the failure with this code already exists")
+    
+
+
 def fn_check(fn, mycursor):
     sql_fn= "SELECT COUNT(*) FROM basics WHERE FN = %s"
     mycursor.execute(sql_fn, (fn,))
     check = mycursor.fetchone()[0]
     
     return check
+
+def code_check(fcd, mycursor):
+    sql_cd = "SELECT COUNT(*) FROM failure where code = %s"
+    mycursor.execute(sql_cd, (fcd,))
+    check = mycursor.fetchone()[0]
     
-    #print(f"SQL Query: {sql}")
-    #print(f"Values: {val}")
-    #print(f"Number of values: {len(val)}")
+    return check
