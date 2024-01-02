@@ -2,6 +2,7 @@ import db_communication
 import os
 import csv
 from datetime import datetime
+import re
 
 
 def read_files_in_folder(folder_path):
@@ -42,6 +43,7 @@ def write_to_db(data, mycursor):
     field=0
     x=0
     fn_checkVal = 0
+    fn = 0
     
     #fill in the table basics
     while field < len(data):
@@ -55,6 +57,7 @@ def write_to_db(data, mycursor):
             z=data[field+1].strip()
             fn_checkVal= fn_check(z, mycursor)
             val.append(z)
+            fn = z
             
         if data[field] == 'Mode ':
             z=data[field+1].strip()
@@ -119,6 +122,7 @@ def write_to_db(data, mycursor):
             fcd= data[field+3]
             fail.append(data[field+5])
             fail.append(data[field+7])
+            failure=1
         field+=1
     
     if code_check(fcd, mycursor) == 0:
@@ -127,6 +131,111 @@ def write_to_db(data, mycursor):
     else:
         print("the failure with this code already exists")
     
+    #fill the FailData table
+    
+    field = 0
+    faildata = []
+    if failure != 0:
+        while field < len(data):
+            if data[field] == 'Code':
+                faildata.append(data[field+1].strip())
+                faildata.append(fn)
+                
+            if data[field]== 'Occurrences':
+                faildata.append(data[field+2].strip())
+                
+            if data[field]== 'N1 (NG):':
+                n1r = numeric(data[field+4], 'float')
+                n1l = numeric(data[field+3], 'float')
+                faildata.append(n1r)
+                faildata.append(n1l)
+                
+            if data[field]== 'NR:':
+                nrr = numeric(data[field+4], 'int')
+                nrl = numeric(data[field+3], 'int')
+                faildata.append(nrr)
+                faildata.append(nrl)
+                
+            if data[field]== 'N2 (NF):':
+                n2r = numeric(data[field+4], 'int')
+                n2l = numeric(data[field+3], 'int')
+                faildata.append(n2r)
+                faildata.append(n2l)
+                
+            if data[field]== 'T4a:':
+                t4a = numeric(data[field+4], 'float')
+                faildata.append(t4a)
+                
+            if data[field]== 'T4b:':
+                t4b = numeric(data[field+4], 'float')
+                faildata.append(t4b)
+                
+            if data[field]== 'OAT:':
+                oatr = numeric(data[field+4], 'float')
+                oatl = numeric(data[field+3], 'float')
+                faildata.append(oatr)
+                faildata.append(oatl)
+                
+            if data[field]== 'TOT (T4):':
+                tot1= numeric(data[field+1], 'int')
+                tot2= numeric(data[field+2], 'int')
+                tot3= numeric(data[field+3], 'int')
+                tot4= numeric(data[field+4], 'int')
+                faildata.append(tot1)
+                faildata.append(tot2)
+                faildata.append(tot3)
+                faildata.append(tot4)
+                
+            if data[field]== 'TRQ (TQ):':
+                trq1= numeric(data[field+1], 'float')
+                trq2= numeric(data[field+2], 'float')
+                trq3= numeric(data[field+3], 'float')
+                trq4= numeric(data[field+4], 'float')
+                faildata.append(trq1)
+                faildata.append(trq2)
+                faildata.append(trq3)
+                faildata.append(trq4)
+                
+            if data[field]== 'P0:':
+                po1= numeric(data[field+1], 'float')
+                po2= numeric(data[field+2], 'float')
+                po3= numeric(data[field+3], 'float')
+                po4= numeric(data[field+4], 'float')
+                faildata.append(po1)
+                faildata.append(po2)
+                faildata.append(po3)
+                faildata.append(po4)
+                
+            if data[field]== 'GENC:':
+                genc1= numeric(data[field+1], 'int')
+                genc2= numeric(data[field+2], 'int')
+                genc3= numeric(data[field+3], 'int')
+                genc4= numeric(data[field+4], 'int')
+                faildata.append(genc1)
+                faildata.append(genc2)
+                faildata.append(genc3)
+                faildata.append(genc4)
+                
+            if data[field]== 'BUSV:':
+                bv1= numeric(data[field+1], 'float')
+                bv2= numeric(data[field+2], 'float')
+                bv3= numeric(data[field+3], 'float')
+                bv4= numeric(data[field+4], 'float')
+                faildata.append(bv1)
+                faildata.append(bv2)
+                faildata.append(bv3)
+                faildata.append(bv4)
+                
+            if data[field]== 'STARTC:':
+                startc = numeric(data[field+4], 'int')
+                faildata.append(startc)
+            
+            field+=1
+        if failcheck(fn, fcd, mycursor) == 0:
+            sql = f"INSERT INTO faildata VALUES ( %s, %s, %s , %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            mycursor.execute(sql, faildata)
+        else:
+            print("the faildata already exists, the file was already processed once")
 
 
 def fn_check(fn, mycursor):
@@ -142,3 +251,23 @@ def code_check(fcd, mycursor):
     check = mycursor.fetchone()[0]
     
     return check
+
+def failcheck(fn, code, mycursor):
+    sql_fcheck = "SELECT COUNT(*) FROM faildata WHERE failCode = %s AND FN = %s"
+    mycursor.execute(sql_fcheck, (code, fn))
+    check = mycursor.fetchone()[0]
+    
+    return check
+    
+
+def numeric(text, type):
+    
+    if type == 'int':
+        number = re.findall(r'\b\d+\b', text)
+        if number:
+            return int(number[0])
+    elif type == 'float':
+        number = re.findall(r'\d+\.\d+|\d+', text)
+        if number:
+            return float(number[0])
+    return None
