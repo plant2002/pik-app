@@ -4,6 +4,7 @@ from tkinterdnd2 import TkinterDnD, DND_FILES
 import os
 import shutil
 import read_files
+import rewrite_files
 
 root = TkinterDnD.Tk()
 root.geometry("1024x682")
@@ -64,9 +65,13 @@ class DragDrop(tk.Canvas):
                 else:
                     print(f"Skipped non-.csv file: {file_path}")
             
-            for file_path in files:
-                folder_path = 'C:/Users/krist/OneDrive/Desktop/Report/uploads'
-            read_files.read_files_in_folder(folder_path)
+            if frames['current'] == frames['start']:
+                for file_path in files:
+                    folder_path = 'C:/Users/krist/OneDrive/Desktop/Report/uploads'
+                read_files.read_files_in_folder(folder_path)
+            elif frames['current'] == frames['reimport']:
+                for file_path in files:
+                    folder_path = 'C:/Users/krist/OneDrive/Desktop/Report/uploads'
 
 class startGUI:
     def __init__(self, master, show_frame):
@@ -317,7 +322,7 @@ class reimportGUI:
         self.frame = Frame(master)
         self.frame.pack(fill="both", expand=True)
 
-        self.canvas = Canvas(
+        self.canvas = DragDrop(
             self.frame,
             bg="#FFFFFF",
             height=682,
@@ -338,7 +343,7 @@ class reimportGUI:
             image=reimportbutton_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=lambda: rewrite_files.rewriting_files(),
             relief="flat"
         )
         button_1.place(
@@ -437,6 +442,7 @@ def show_frame(page_name):
 
     # Update the current frame
     frames['current'] = frames[page_name](root, lambda page=page_name: show_frame(page))
+
 
 frames['current'] = frames['start'](root, lambda page='start': show_frame(page))
 
