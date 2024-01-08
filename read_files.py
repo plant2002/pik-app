@@ -26,9 +26,11 @@ def read_files_in_folder(folder_path):
                 data = clean_csv(file_path)
                 write_to_db(data, mycursor)
                 conn.commit()  # Commit changes to the database after processing each file
-                move_read_files(file_name)
+                
     finally:
         conn.close()  # Ensure the connection is closed even if an exception occurs
+        for file_name in files:
+            move_read_files(file_name)
 
 
 def clean_csv(file):
@@ -117,21 +119,26 @@ def write_to_db(data, mycursor):
     
     field = 0
     fail = []
+    fcd = 0
+    check = 0
+    failure=0
     while field < len(data):
-        print(data[field])
         if data[field] == 'Failures':
             fail.append(data[field+3])
             fcd= data[field+3]
             fail.append(data[field+5])
             fail.append(data[field+7])
             failure=1
+            check+=1
         field+=1
+        
     
-    if code_check(fcd, mycursor) == 0:
-        sql = f"INSERT INTO failure values ( %s, %s, %s )"
-        mycursor.execute(sql, fail)
-    else:
-        print("the failure with this code already exists")
+    if check != 0:
+        if code_check(fcd, mycursor) == 0:
+            sql = f"INSERT INTO failure values ( %s, %s, %s)"
+            mycursor.execute(sql, fail)
+        else:
+            print("the failure with this code already exists")
     
     #fill the FailData table
     
@@ -239,7 +246,6 @@ def write_to_db(data, mycursor):
         else:
             print("the faildata already exists, the file was already processed once")
 
-
 def fn_check(fn, mycursor):
     sql_fn= "SELECT COUNT(*) FROM basics WHERE FN = %s"
     mycursor.execute(sql_fn, (fn,))
@@ -290,10 +296,9 @@ def move_read_files(file_name):
             # Create full paths for the source and destination
             save_path = os.path.join(destination_folder, file_name)
 
-            print(f"Moving file from: {file_path}")
-            print(f"Saving file to: {save_path}")
-
             try:
+                if os.path.exists(save_path):
+                    os.remove(save_path)
                 # Move the file
                 shutil.move(file_path, save_path)
                 print("File moved successfully!")
