@@ -13,7 +13,7 @@ currently done:
 - GUI is okay now 
 - GUI connect to other frames works okay, all in one file though (GUI2.py) since the links weren't working as they should in multiple files. 
 - uploading csv files to a folder 'uploads' 
-- importing into DB (partially, basics work, Failures yet to be done)
+- importing into DB (all works and gets inserted. Failures only when a new code is detected)
 - moving csv after it was processed
 - reimporting works and rewrites the rows in the database
 
