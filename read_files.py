@@ -3,6 +3,7 @@ import os
 import csv
 from datetime import datetime
 import re
+import shutil
 
 
 def read_files_in_folder(folder_path):
@@ -25,6 +26,7 @@ def read_files_in_folder(folder_path):
                 data = clean_csv(file_path)
                 write_to_db(data, mycursor)
                 conn.commit()  # Commit changes to the database after processing each file
+                move_read_files(file_name)
     finally:
         conn.close()  # Ensure the connection is closed even if an exception occurs
 
@@ -145,34 +147,34 @@ def write_to_db(data, mycursor):
                 faildata.append(data[field+2].strip())
                 
             if data[field]== 'N1 (NG):':
-                n1r = numeric(data[field+4], 'float')
-                n1l = numeric(data[field+3], 'float')
+                n1r = numeric(data[field+3], 'float')
+                n1l = numeric(data[field+2], 'float')
                 faildata.append(n1r)
                 faildata.append(n1l)
                 
             if data[field]== 'NR:':
-                nrr = numeric(data[field+4], 'int')
-                nrl = numeric(data[field+3], 'int')
+                nrr = numeric(data[field+3], 'int')
+                nrl = numeric(data[field+2], 'int')
                 faildata.append(nrr)
                 faildata.append(nrl)
                 
             if data[field]== 'N2 (NF):':
-                n2r = numeric(data[field+4], 'int')
-                n2l = numeric(data[field+3], 'int')
+                n2r = numeric(data[field+3], 'int')
+                n2l = numeric(data[field+2], 'int')
                 faildata.append(n2r)
                 faildata.append(n2l)
                 
             if data[field]== 'T4a:':
-                t4a = numeric(data[field+4], 'float')
+                t4a = numeric(data[field+3], 'float')
                 faildata.append(t4a)
                 
             if data[field]== 'T4b:':
-                t4b = numeric(data[field+4], 'float')
+                t4b = numeric(data[field+3], 'float')
                 faildata.append(t4b)
                 
             if data[field]== 'OAT:':
-                oatr = numeric(data[field+4], 'float')
-                oatl = numeric(data[field+3], 'float')
+                oatr = numeric(data[field+3], 'float')
+                oatl = numeric(data[field+2], 'float')
                 faildata.append(oatr)
                 faildata.append(oatl)
                 
@@ -227,7 +229,7 @@ def write_to_db(data, mycursor):
                 faildata.append(bv4)
                 
             if data[field]== 'STARTC:':
-                startc = numeric(data[field+4], 'int')
+                startc = numeric(data[field+3], 'int')
                 faildata.append(startc)
             
             field+=1
@@ -258,7 +260,6 @@ def failcheck(fn, code, mycursor):
     check = mycursor.fetchone()[0]
     
     return check
-    
 
 def numeric(text, type):
     
@@ -271,3 +272,32 @@ def numeric(text, type):
         if number:
             return float(number[0])
     return None
+
+def move_read_files(file_name):
+    source_folder = r"C:\Users\krist\OneDrive\Desktop\Report\uploads"
+    destination_folder = r"C:\Users\krist\OneDrive\Desktop\Report\processed"
+    
+        # Ensure that both source and destination folders exist
+    if not os.path.exists(source_folder) or not os.path.exists(destination_folder):
+        print("Source or destination folder does not exist.")
+        return
+
+    else:
+        file_path = os.path.join(source_folder, file_name)
+
+        # Check if the file has the specified extension (.csv in this case)
+        if file_path.lower().endswith('.csv'):
+            # Create full paths for the source and destination
+            save_path = os.path.join(destination_folder, file_name)
+
+            print(f"Moving file from: {file_path}")
+            print(f"Saving file to: {save_path}")
+
+            try:
+                # Move the file
+                shutil.move(file_path, save_path)
+                print("File moved successfully!")
+            except Exception as e:
+                print(f"Error moving file: {e}")
+        else:
+            print(f"Skipped non-.csv file: {file_path}")
