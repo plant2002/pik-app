@@ -1,8 +1,33 @@
 #Pik-App
 
-current stuff I haven't started working on yet:
+current stuff I am working on:
 
 -graphs, analysis of the data in DB
+
+Analysis: 
+-	Analize parametrov glede na količino oz. od/do tip poizvedb nad:
+o	Flight number
+o	Flight duration
+o	Engine cycles
+o	Overlimits
+-	Analize dela z napakami (failures)
+o	Code
+o	Name
+o	Occurrences
+o	Start time
+o	Duration
+o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dodatne posamezne analize kaj je šlo narobe, dodatne forme za poizvedbe)
+-	Grafi:
+o	Duration of flights / date
+o	Duration of flight/ flight number
+o	Engine cycles / flight number or date
+o	Overlimits / flight
+o	Number of errors/flight number or date
+-	Izpisi/export CSV datotek o:
+o	Napake glede na flight number oz. od/do flight number
+o	Izpis podatkov za flight number
+o	Izpis letov in podatkov glede na datum
+
 
 currently done:
 
