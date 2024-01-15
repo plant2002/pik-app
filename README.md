@@ -13,9 +13,10 @@ Analysis:
 -	Analize dela z napakami (failures)
 - [ ]	Code
 - [ ]	Name
-- [ ]	Occurrences
+- [x]	Occurrences
 - [ ]	Start time
 - [ ]	Duration
+- [x]	get the name, descr, code of errors happening on date or date_from/date_to
 o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dodatne posamezne analize kaj je šlo narobe, dodatne forme za poizvedbe)
 -	Grafi:
 - [x]	Duration of flights / date
