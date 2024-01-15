@@ -22,7 +22,7 @@ o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dod
 - [x]	Duration of flight/ flight number
 - [x]	Engine cycles / flight number or date
 - [x]	Overlimits / flight
-- [ ]	Number of errors/flight number or date
+- [x]	Number of errors/flight number or date
 -	Izpisi/export CSV datotek o:
 - [ ]	Napake glede na flight number oz. od/do flight number
 - [ ]	Izpis podatkov za flight number
