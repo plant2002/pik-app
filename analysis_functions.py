@@ -177,7 +177,74 @@ def overlimits_date (date_from, date_to):
     
     db_communication.close_connection(connection[1])
 
-#def error_fn(fn):
+#error occurrences in flight from fn_from to fn_to
+def error_fn(fn_from, fn_to):
+    connection = db_communication.connect_to_database()
+
+    all_flight_numbers = pd.DataFrame({'FN': range(fn_from, fn_to+1)})
+
+    # Fetch data from the database for the specified flight_number range
+    sql = "SELECT FN, occr FROM faildata WHERE FN BETWEEN %s AND %s"
+    df = pd.read_sql(sql, connection[1], params=(fn_from, fn_to))
+
+    # Merge the data with all_flight_numbers to fill missing flight_numbers with 0 occurrences
+    if df.empty:
+        merged_df = all_flight_numbers.assign(occr=0)
+    else:
+        # Merge the data with all_flight_numbers to fill missing flight_numbers with 0 occurrences
+        merged_df = all_flight_numbers.merge(df, on='FN', how='left').fillna(0)
+
+    # Plotting the graph with formatting adjustments
+    plt.figure(figsize=(10, 6))
+    plt.bar(merged_df['FN'], merged_df['occr'])
+    plt.xlabel('Flight Number (FN)')
+    plt.ylabel('Number of Occurrences (occr)')
+    plt.title('Occurrences of Errors per Flight Number')
+
+    # Format y-axis to display only integer values
+    plt.gca().yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+
+    # Set x-axis ticks for all flight numbers
+    plt.xticks(merged_df['FN'], rotation=45)
+
+    plt.show()
+
+    db_communication.close_connection(connection[1])
+
+def error_date(date_from, date_to):
+    connection = db_communication.connect_to_database()
+    sql1 = "SELECT FN, GPSdt FROM basics WHERE DATE(GPSdt) BETWEEN %s AND %s"
+    df1 = pd.read_sql(sql1, connection[1], params=(date_from, date_to))
+    db_communication.close_connection(connection[1])
+
+    # All FN that show up on dates from date_from to date_to
+    min_value = int(df1['FN'].min())
+    max_value = int(df1['FN'].max())
+
+    # Get occr from faildata from min_value of fn to max_value of fn
+    connection = db_communication.connect_to_database()
+    sql2 = "SELECT FN, occr FROM faildata WHERE FN BETWEEN %s AND %s"
+    df2 = pd.read_sql(sql2, connection[1], params=(min_value, max_value))
+    db_communication.close_connection(connection[1])
+
+    # Merge dataframes on 'FN'
+    merged_df = pd.merge(df1, df2, how='left', on='FN')
+    merged_df['occr'] = merged_df['occr'].fillna(0).astype(int)
+    merged_df['date'] = merged_df['GPSdt'].dt.date
+    
+    date_range = pd.date_range(start=date_from, end=date_to, freq='D').date
+    date_range_df = pd.DataFrame({'date': date_range})
+    result_df = pd.merge(date_range_df, merged_df.groupby('date')['occr'].sum().reset_index(), how='left', on='date')
+    result_df['occr'] = result_df['occr'].fillna(0).astype(int)
+
+    plt.bar(result_df['date'], result_df['occr'])
+    plt.xlabel('Date')
+    plt.ylabel('Number of error occurrences')
+    plt.title('Occurrences of errors by Date')
+    plt.xticks(result_df['date'], rotation=90)
+    plt.yticks(range(int(result_df['occr'].max()) + 1))
+    
+    plt.show()
 
 #def error_date(date):
 
