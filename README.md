@@ -9,7 +9,7 @@ Analysis:
 - [ ] Flight number
 - [x]	Flight duration (per day & per flight)
 - [x]	Engine cycles (2 graphs)
-- [ ]	Overlimits
+- [x]	Overlimits
 -	Analize dela z napakami (failures)
 - [ ]	Code
 - [ ]	Name
@@ -21,7 +21,7 @@ o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dod
 - [x]	Duration of flights / date
 - [x]	Duration of flight/ flight number
 - [x]	Engine cycles / flight number or date
-- [ ]	Overlimits / flight
+- [x]	Overlimits / flight
 - [ ]	Number of errors/flight number or date
 -	Izpisi/export CSV datotek o:
 - [ ]	Napake glede na flight number oz. od/do flight number
