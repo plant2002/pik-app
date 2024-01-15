@@ -18,9 +18,9 @@ Analysis:
 - [ ]	Duration
 o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dodatne posamezne analize kaj je šlo narobe, dodatne forme za poizvedbe)
 -	Grafi:
-- [ ]	Duration of flights / date
-- [ ]	Duration of flight/ flight number
-- [ ]	Engine cycles / flight number or date
+- [x]	Duration of flights / date
+- [x]	Duration of flight/ flight number
+- [x]	Engine cycles / flight number or date
 - [ ]	Overlimits / flight
 - [ ]	Number of errors/flight number or date
 -	Izpisi/export CSV datotek o:
