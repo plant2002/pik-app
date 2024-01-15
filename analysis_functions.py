@@ -3,6 +3,8 @@ import db_communication
 import datetime as dt
 import matplotlib.pyplot as plt
 
+#graphs
+
 #flying time per day and per flight number
 def date_flightTime(date):
     connection = db_communication.connect_to_database()
@@ -211,6 +213,7 @@ def error_fn(fn_from, fn_to):
 
     db_communication.close_connection(connection[1])
 
+#error occurrences from date_from to date_to per day --> update later for monthly/yearly number !
 def error_date(date_from, date_to):
     connection = db_communication.connect_to_database()
     sql1 = "SELECT FN, GPSdt FROM basics WHERE DATE(GPSdt) BETWEEN %s AND %s"
@@ -246,8 +249,63 @@ def error_date(date_from, date_to):
     
     plt.show()
 
-#def error_date(date):
+#outputs
 
+#error codes and number during one day
+def error_date(date):
+    connection = db_communication.connect_to_database()
+    sql1 = "SELECT FN, GPSdt FROM basics WHERE DATE(GPSdt) = %s"
+    df1 = pd.read_sql(sql1, connection[1], params=(date, ))
+    db_communication.close_connection(connection[1])
+
+    connection = db_communication.connect_to_database()
+    sql2 = f"SELECT failCode, FN FROM faildata WHERE FN IN ({', '.join(map(str, df1['FN']))})"
+    df2 = pd.read_sql(sql2, connection[1])
+    db_communication.close_connection(connection[1])
+    num_rows = df2.shape[0]
+    
+    merged_df = pd.merge(df1, df2, on='FN', how='inner')
+    error_counts = merged_df['failCode'].value_counts().reset_index()
+    error_counts.columns = ['failCode', 'count']
+    unique_failcodes = merged_df['failCode'].unique()
+    print(unique_failcodes)
+    print(num_rows)
+    
+    connection = db_communication.connect_to_database()
+    sql3 = f"SELECT code, name, descr FROM failure WHERE code IN ({', '.join(map(str, unique_failcodes))})"
+    df3 = pd.read_sql(sql3, connection[1])
+    
+    print(df3)
+    db_communication.close_connection(connection[1])
+
+
+#error codes and number of them over multiple days
+def error_dates(date_from, date_to):
+    connection = db_communication.connect_to_database()
+    sql1 = "SELECT FN, GPSdt FROM basics WHERE DATE(GPSdt) BETWEEN %s AND %s"
+    df1 = pd.read_sql(sql1, connection[1], params=(date_from, date_to ))
+    db_communication.close_connection(connection[1])
+
+    connection = db_communication.connect_to_database()
+    sql2 = f"SELECT failCode, FN FROM faildata WHERE FN IN ({', '.join(map(str, df1['FN']))})"
+    df2 = pd.read_sql(sql2, connection[1])
+    db_communication.close_connection(connection[1])
+    num_rows = df2.shape[0]
+    
+    merged_df = pd.merge(df1, df2, on='FN', how='inner')
+    error_counts = merged_df['failCode'].value_counts().reset_index()
+    error_counts.columns = ['failCode', 'count']
+    unique_failcodes = merged_df['failCode'].unique()
+    print(unique_failcodes)
+    print(num_rows)
+    connection = db_communication.connect_to_database()
+    sql3 = f"SELECT code, name, descr FROM failure WHERE code IN ({', '.join(map(str, unique_failcodes))})"
+    df3 = pd.read_sql(sql3, connection[1])
+    
+    print(df3)
+    db_communication.close_connection(connection[1])
+
+error_dates('2023-09-09', '2023-09-10')
 #failures
 
 #which fail codes appeared in the flights between fn_from and fn_to
