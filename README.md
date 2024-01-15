@@ -28,6 +28,7 @@ o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dod
 - [ ]	Izpis podatkov za flight number
 - [ ]	Izpis letov in podatkov glede na datum
 
+<h3>MAKE SURE IT'S BULLETPROOF (SUCH AS MAKING SURE THAT THEY CAN'T INSERT BIGGER NUMBER IN FN_FROM AND SMALLER NUMBER IN FN_TO BECAUSE IT MAKES THE WHOLE THING INCORRECT!!!!)</h3>
 
 currently done:
 
