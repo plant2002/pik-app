@@ -3,8 +3,6 @@ import db_communication
 import datetime as dt
 import matplotlib.pyplot as plt
 
-#graphs
-
 #flying time per day and per flight number
 def date_flightTime(date):
     connection = db_communication.connect_to_database()
@@ -92,6 +90,7 @@ def engineCyc_fn(fn_from, fn_to):
     # Close the database connection
     connection[1].close()
 
+#maximum engineCyc values per day (n1 & n2)
 def engineCyc_date(date_from, date_to):
     connection = db_communication.connect_to_database()
 
@@ -127,7 +126,56 @@ def engineCyc_date(date_from, date_to):
     
     db_communication.close_connection(connection[1])
 
-#def overlimits_flight(fn_from, fn_to):
+#the overlimits per flight --> flightnmb_from to flightnmb_to
+def overlimits_flight(fn_from, fn_to):
+    connection = db_communication.connect_to_database()
+
+    sql = "SELECT FN, NRol, TRQol, Engol FROM basics WHERE FN BETWEEN %s AND %s"
+    df = pd.read_sql(sql, connection[1], params=(fn_from, fn_to))
+    
+    if df.empty or df[['NRol', 'TRQol', 'Engol']].isnull().all().all():
+        # Display a new window message if there is no data or only NULL values
+        print("There is no data.")
+    else:
+        # Calculate the sum of 'NRol', 'TRQol', and 'Engol' for each flight
+        df['Overlimits'] = df[['NRol', 'TRQol', 'Engol']].sum(axis=1)
+
+        # Plotting the data with only existing flight numbers on the x-axis
+        plt.figure(figsize=(10, 6))
+        plt.bar(df['FN'], df['Overlimits'])
+        plt.xticks(df['FN'])  # Set x-axis ticks to only existing flight numbers
+        plt.xlabel('Flight Number (FN)')
+        plt.ylabel('Sum of Overlimits')
+        plt.title('Overlimits during Flight')
+        plt.show()
+    
+    db_communication.close_connection(connection[1])
+
+#the overlimits per flight --> date_from to date_to
+def overlimits_date (date_from, date_to):
+    connection = db_communication.connect_to_database()
+
+    sql = "SELECT FN, NRol, TRQol, Engol FROM basics WHERE DATE(GPSdt) BETWEEN %s AND %s"
+    df = pd.read_sql(sql, connection[1], params=(date_from, date_to))
+    
+    if df.empty or df[['NRol', 'TRQol', 'Engol']].isnull().all().all():
+        # Display a new window message if there is no data or only NULL values
+        print("There is no data.")
+    else:
+        # Calculate the sum of 'NRol', 'TRQol', and 'Engol' for each flight
+        df['Overlimits'] = df[['NRol', 'TRQol', 'Engol']].sum(axis=1)
+
+        title= date_from + " to " + date_to
+        # Plotting the data with only existing flight numbers on the x-axis
+        plt.figure(figsize=(10, 6))
+        plt.bar(df['FN'], df['Overlimits'])
+        plt.xticks(df['FN'])  # Set x-axis ticks to only existing flight numbers
+        plt.xlabel(title)
+        plt.ylabel('Sum of Overlimits')
+        plt.title('Overlimits during Flight')
+        plt.show()
+    
+    db_communication.close_connection(connection[1])
 
 #def error_fn(fn):
 
@@ -144,4 +192,3 @@ def engineCyc_date(date_from, date_to):
     #df = pd.read_sql(sql, connection[1], params=(date_from, date_to))
 
 
-engineCyc_date('2023-08-23' , '2023-09-03')
