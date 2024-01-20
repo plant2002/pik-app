@@ -13,9 +13,8 @@ Analysis:
 -	Analize dela z napakami (failures)
 - [x]	Name (also show code when choosing so I killed two birds with one stone)
 - [x]	Occurrences
-- [ ]	Start time
-- [ ]	Duration
 - [x]	get the name, descr, code of errors happening on date or date_from/date_to
+- [ ]	calculate averages and find the ones that are above/below average and show them on a graph
 o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dodatne posamezne analize kaj je šlo narobe, dodatne forme za poizvedbe)
 -	Grafi:
 - [x]	Duration of flights / date
