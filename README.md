@@ -11,8 +11,7 @@ Analysis:
 - [x]	Engine cycles (2 graphs)
 - [x]	Overlimits
 -	Analize dela z napakami (failures)
-- [ ]	Code
-- [ ]	Name
+- [x]	Name (also show code when choosing so I killed two birds with one stone)
 - [x]	Occurrences
 - [ ]	Start time
 - [ ]	Duration
