@@ -22,10 +22,12 @@ o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dod
 - [x]	Engine cycles / flight number or date
 - [x]	Overlimits / flight
 - [x]	Number of errors/flight number or date
--	Izpisi/export CSV datotek o:
-- [ ]	Napake glede na flight number oz. od/do flight number
-- [ ]	Izpis podatkov za flight number
-- [ ]	Izpis letov in podatkov glede na datum
+-	export CSVs:
+- [x]	data fn_from/fn_to
+- [ ]	data for specific fn
+- [ ]	data for fns for specific date
+- [ ]	data for fns date_from/date_to
+- [ ]	export all data about fns with specific error
 
 <h3>MAKE SURE IT'S BULLETPROOF (SUCH AS MAKING SURE THAT THEY CAN'T INSERT BIGGER NUMBER IN FN_FROM AND SMALLER NUMBER IN FN_TO BECAUSE IT MAKES THE WHOLE THING INCORRECT!!!!)</h3>
 
