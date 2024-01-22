@@ -25,7 +25,7 @@ o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dod
 -	export CSVs:
 - [x]	data fn_from/fn_to
 - [x]	data for specific fn
-- [ ]	data for fns for specific date
+- [x]	data for fns for specific date
 - [x]	data for fns date_from/date_to
 - [x]	export all data about fns with specific error
 
