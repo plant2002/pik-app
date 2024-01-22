@@ -1,5 +1,11 @@
 <h1>Pik-App</h1>
 
+<h2>TO DO:</h2>
+- [ ] Make sure it's bulletproof (after presentation, such as that date_from is earlier than date_to, fn_from smaller than fn_to etc)
+- [ ] connect GUI to functions
+- [ ] show graphs in GUI Analysis
+- [ ] change GUI Analysis
+
 Analysis: 
 - analysis of parameters according to:
 - [ ] Flight number (kinda useless so maybe not)
@@ -23,21 +29,17 @@ Analysis:
 - [x]	data for fns for specific date
 - [x]	data for fns date_from/date_to
 - [x]	export all data about fns with specific error
-
-<h3>MAKE SURE IT'S BULLETPROOF (SUCH AS MAKING SURE THAT THEY CAN'T INSERT BIGGER NUMBER IN FN_FROM AND SMALLER NUMBER IN FN_TO BECAUSE IT MAKES THE WHOLE THING INCORRECT!!!!)</h3>
-
-currently done:
-
-- cleaning up CSV 
-- database 
-- connecting DB to python 
-- main page of GUI 
-- GUI is okay now 
-- GUI connect to other frames works okay, all in one file though (GUI2.py) since the links weren't working as they should in multiple files. 
-- uploading csv files to a folder 'uploads' 
-- importing into DB (all works and gets inserted. Failures only when a new code is detected)
-- moving csv after it was processed
-- reimporting works and rewrites the rows in the database
+Basic functions:
+- [x] cleaning up CSV 
+- [x] database 
+- [x] connecting DB to python 
+- [x] main page of GUI 
+- [x] GUI is okay now 
+- [x] GUI connect to other frames works okay, all in one file though (GUI2.py) since the links weren't working as they should in multiple files. 
+- [x] uploading csv files to a folder 'uploads' 
+- [x] importing into DB (all works and gets inserted. Failures only when a new code is detected)
+- [x] moving csv after it was processed
+- [x] reimporting works and rewrites the rows in the database
 
 https://www.figma.com/file/sVt59DgmlymZQrweML1bTM/Pik-app?type=design&node-id=36-27&mode=design&t=1rqOvimrYzFkVntX-0 tkdesigner notes:
 
