@@ -1,10 +1,10 @@
 <h1>Pik-App</h1>
 
-<h2>TO DO:</h2>
-- [ ] Make sure it's bulletproof (after presentation, such as that date_from is earlier than date_to, fn_from smaller than fn_to etc)
-- [ ] connect GUI to functions
-- [ ] show graphs in GUI Analysis
-- [ ] change GUI Analysis
+TO DO:
+- [ ]	Make sure it's bulletproof (after presentation, such as that date_from is earlier than date_to, fn_from smaller than fn_to etc)
+- [ ]	connect GUI to functions
+- [ ]	show graphs in GUI Analysis
+- [ ]	change GUI Analysis
 
 Analysis: 
 - analysis of parameters according to:
