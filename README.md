@@ -1,22 +1,17 @@
-#Pik-App
-
-current stuff I am working on:
-
--graphs, analysis of the data in DB
+<h1>Pik-App</h1>
 
 Analysis: 
--	Analize parametrov glede na količino oz. od/do tip poizvedb nad:
+- analysis of parameters according to:
 - [ ] Flight number (kinda useless so maybe not)
 - [x]	Flight duration (per day & per flight)
 - [x]	Engine cycles (2 graphs)
 - [x]	Overlimits
--	Analize dela z napakami (failures)
+-	Anallysis of failures:
 - [x]	Name (also show code when choosing so I killed two birds with one stone)
 - [x]	Occurrences
 - [x]	get the name, descr, code of errors happening on date or date_from/date_to
 - [ ]	calculate averages and find the ones that are above/below average and show them on a graph <h3>this should probably be left for after presentation though it's super important so idk</h3>
-o	Context (kaj je šlo narobe, se deli dalje na NG, NF, T4a, T4b,…., tukaj dodatne posamezne analize kaj je šlo narobe, dodatne forme za poizvedbe)
--	Grafi:
+-	Graphs:
 - [x]	Duration of flights / date
 - [x]	Duration of flight/ flight number
 - [x]	Engine cycles / flight number or date
