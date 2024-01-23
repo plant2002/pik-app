@@ -5,6 +5,9 @@ import os
 import shutil
 import read_files
 import rewrite_files
+import analysis_functions
+import export_csv
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 root = TkinterDnD.Tk()
 root.geometry("1024x682")
@@ -203,6 +206,7 @@ class analysisGUI:
     def __init__(self, master, show_frame):
         self.master = master
         self.show_frame = show_frame
+        self.selected_value = None
 
         self.frame = Frame(master)
         self.frame.pack(fill="both", expand=True)
@@ -448,7 +452,37 @@ class analysisGUI:
                 fill="#C43746",
                 font=("InriaSans Regular", 16 * -1)
             )
-            self.widgets_list.extend([canvas])
+            
+            options_map = {
+                "Graphs of overlimits/flights" : "ovr_flight",
+                "Graphs of overlimits/dates" : "ovr_date",
+                "Graphs of occurrences of errors/flights" : "errorfn_occr",
+                "Graphs of errors/dates" : "error_date",
+            }
+            
+            selected_option = StringVar()
+            selected_option.set(list(options_map.keys())[0])  # Set the default option
+            drop_down_menu = OptionMenu(canvas, selected_option, *options_map.keys())
+            drop_down_menu.place(x=100, y=100)  # Adjust the position as needed
+
+            def on_option_change(*args):
+                selected_display_text = selected_option.get()
+                self.selected_value = options_map.get(selected_display_text)
+                print(f"Selected option: {selected_display_text}, Value: {self.selected_value}")
+                # Now you can use 'selected_value' in your function
+
+            selected_option.trace_add("write", on_option_change)
+
+            # Add a "Go" button
+            go_button = Button(
+                text="Go",
+                command=lambda: self.failure_graphs(self.selected_value),
+                relief="flat"
+            )
+            go_button.place(x=900, y=217)
+            
+            self.widgets_list.extend([go_button, drop_down_menu, canvas])
+            
         if option == "AnalysisOtherGraph":
             canvas.create_rectangle(
                 601.0,
@@ -464,7 +498,35 @@ class analysisGUI:
                 text="OTHER - GRAPHS",
                 fill="#C43746",
                 font=("InriaSans Regular", 16 * -1))
-            self.widgets_list.extend([canvas])
+
+            options_map = {
+                "Graph of flightime/date" : "fd_date",
+                "Graph of time/date" : "time_date",
+                "Graph of engine Cycles/flight" : "engCyc_fn",
+                "Graph of engine Cycles/date" : "engCyc_date",
+            }
+            
+            selected_option = StringVar()
+            selected_option.set(list(options_map.keys())[0])  # Set the default option
+            drop_down_menu = OptionMenu(canvas, selected_option, *options_map.keys())
+            drop_down_menu.place(x=100, y=100)  # Adjust the position as needed
+
+            def on_option_change(*args):
+                selected_display_text = selected_option.get()
+                self.selected_value = options_map.get(selected_display_text)
+                print(f"Selected option: {selected_display_text}, Value: {self.selected_value}")
+                # Now you can use 'selected_value' in your function
+
+            selected_option.trace_add("write", on_option_change)
+
+            # Add a "Go" button
+            go_button = Button(
+                text="Go",
+                command=lambda: self.other_graphs(self.selected_value),
+                relief="flat"
+            )
+            go_button.place(x=900, y=217)
+            self.widgets_list.extend([go_button,canvas])
             
         if option == "AnalysisOtherExport":
             canvas.create_rectangle(
@@ -483,6 +545,34 @@ class analysisGUI:
                 font=("InriaSans Regular", 16 * -1))
             self.widgets_list.extend([canvas])
 
+            options_map = {
+                "export data for flights" : "fn",
+                "export data for specific flight" : "fn_spec",
+                "export data of all flights with error" : "error",
+                "export data for dates" : "dates",
+                "export data for a specific date" : "date_spec",
+            }
+            
+            selected_option = StringVar()
+            selected_option.set(list(options_map.keys())[0])  # Set the default option
+            drop_down_menu = OptionMenu(canvas, selected_option, *options_map.keys())
+            drop_down_menu.place(x=100, y=100)  # Adjust the position as needed
+
+            def on_option_change(*args):
+                selected_display_text = selected_option.get()
+                self.selected_value = options_map.get(selected_display_text)
+                print(f"Selected option: {selected_display_text}, Value: {self.selected_value}")
+                # Now you can use 'selected_value' in your function
+
+            selected_option.trace_add("write", on_option_change)
+
+            # Add a "Go" button
+            go_button = Button(
+                text="Go",
+                command=lambda: self.other_export(self.selected_value),
+                relief="flat"
+            )
+            go_button.place(x=900, y=217)
         if option == "AnalysisFailOutput":
             canvas.create_rectangle(
                 601.0,
@@ -499,9 +589,95 @@ class analysisGUI:
                 fill="#C43746",
                 font=("InriaSans Regular", 16 * -1))
             self.widgets_list.extend([canvas])
-        
-        canvas.place(x=0, y=0)
-        
+
+            options_map = {
+                "Data error/date" : "error_date",
+                "Data error/dates" : "error_dates",
+                "Error code data" : "error_code_data",
+                "Error code flight" : "error_code_flight",
+            }
+            
+            selected_option = StringVar()
+            selected_option.set(list(options_map.keys())[0])  # Set the default option
+            drop_down_menu = OptionMenu(canvas, selected_option, *options_map.keys())
+            drop_down_menu.place(x=100, y=100)  # Adjust the position as needed
+
+            def on_option_change(*args):
+                selected_display_text = selected_option.get()
+                self.selected_value = options_map.get(selected_display_text)
+                print(f"Selected option: {selected_display_text}, Value: {self.selected_value}")
+                # Now you can use 'selected_value' in your function
+
+            selected_option.trace_add("write", on_option_change)
+
+            # Add a "Go" button
+            go_button = Button(
+                text="Go",
+                command=lambda: self.failure_outputs(self.selected_value),
+                relief="flat"
+            )
+            go_button.place(x=900, y=217)
+
+            canvas.place(x=0, y=0)
+    
+    def failure_graphs(self, option):
+        if option == "ovr_flight":
+            entry_label = Label(self.canvas, text="Flight Number from:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="Flight Number to:")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.overlimits_flight(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
+            
+        if option == "ovr_date":
+            print("got to function")
+        if option == "errorfn_occr":
+            print("got to function")
+        if option == "error_date":
+            print("got to function")
+
+    def failure_outputs(self, option):
+        if option == "error_date":
+            print("got to function")
+        if option == "error_dates":
+            print("got to function")
+        if option == "error_code_data":
+            print("got to function")
+        if option == "error_code_flight":
+            print("got to function")
+
+    def other_graphs(self, option):
+        if option == "fd_date":
+            print("got to function")
+        if option == "time_date":
+            print("got to function")
+        if option == "engCyc_fn":
+            print("got to function")
+        if option == "engCyc_date":
+            print("got to function")
+
+    def other_export(self, option):
+        if option == "fn":
+            print("got to function")
+        if option == "fn_spec":
+            print("got to function")
+        if option == "error":
+            print("got to function")
+        if option == "dates":
+            print("got to function")
+        if option == "date_spec":
+            print("got to function")
+    
     def destroy(self):
         self.frame.destroy()
 
