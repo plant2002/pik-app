@@ -224,8 +224,11 @@ class analysisGUI:
         self.current_option = "Basics"
         self.content_frame = Frame(self.canvas, bg="#D9D9D9")
         self.content_frame.place(x=601.0, y=117.0, width=399.0, height=240.0)
+        self.output_frame = Frame(self.canvas, bg="#D9D9D9")
+        self.output_frame.place(x=27.0, y=117.0, width=550.0, height=550.0,)
         self.widgets_list = []
         self.change_canvas(self.current_option)
+        self.result_label = None
 
         image_1 = self.canvas.create_image(
             804.0,
@@ -621,6 +624,8 @@ class analysisGUI:
             canvas.place(x=0, y=0)
     
     def failure_graphs(self, option):
+        for widget in self.widgets_list:
+            widget.destroy()
         if option == "ovr_flight":
             entry_label = Label(self.canvas, text="Flight Number from:")
             entry_label.place(x=650, y=270)
@@ -637,8 +642,7 @@ class analysisGUI:
                 command=lambda: analysis_functions.overlimits_flight(data_entry_from.get(), data_entry_to.get()),
                 relief="flat"
             )
-            go_button.place(x=950, y=300)
-            
+            go_button.place(x=950, y=300)          
         if option == "ovr_date":
             entry_label = Label(self.canvas, text="Date from (Y-M-D):")
             entry_label.place(x=650, y=270)
@@ -690,6 +694,7 @@ class analysisGUI:
                 relief="flat"
             )
             go_button.place(x=950, y=300)
+            
 
 #have to correct this here!!!!!!
     def failure_outputs(self, option):
@@ -701,10 +706,11 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.error_date_output(data_entry_from.get()),
+                command=lambda: self.display_error_date_output(data_entry_from.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)
+
         if option == "error_dates":
             entry_label = Label(self.canvas, text="From date (Y-M-D):")
             entry_label.place(x=650, y=270)
@@ -718,7 +724,7 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.error_dates_output(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: self.display_error_dates_output(data_entry_from.get(), data_entry_to.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)
@@ -764,6 +770,54 @@ class analysisGUI:
                 command=lambda: analysis_functions.error_code_flight(self.selected_value),
                 relief="flat"
             )
+
+    def display_error_date_output(self, data):
+        if self.result_label:
+            self.result_label.destroy()
+
+        # Destroy other widgets if needed
+        for widget in self.widgets_list:
+            widget.destroy()
+
+        # Call the analysis function to get the result
+        result = analysis_functions.error_date_output(data)
+
+        # Create a label to display the result in the output_frame
+        self.result_label = Label(self.output_frame, text=result)
+        self.result_label.grid(column=0, columnspan=5, padx=20, pady=20, sticky="w")
+
+    def display_error_dates_output(self, data_from, data_to):
+        if self.result_label:
+            self.result_label.destroy()
+
+        # Destroy other widgets if needed
+        for widget in self.widgets_list:
+            widget.destroy()
+
+        # Call the analysis function to get the result
+        result_string, df3 = analysis_functions.error_dates_output(data_from, data_to)
+
+        # Display the result string
+        label_result = Label(self.output_frame, text=result_string, relief=tk.RIDGE, width=60)
+        label_result.grid(row=0, column=0, columnspan=3, padx=20, pady=20, sticky="nsew")
+        self.widgets_list.append(label_result)
+
+        # Define column widths
+        column_widths = [10, 20, 35]  # You can adjust these values as needed
+
+        # Display column names for the DataFrame
+        for col, (col_name, width) in enumerate(zip(df3.columns, column_widths)):
+            label = Label(self.output_frame, text=col_name, relief=tk.RIDGE, width=width)
+            label.grid(row=1, column=col, padx=5, pady=5, sticky="nsew")
+            self.widgets_list.append(label)
+
+        # Display data from the DataFrame
+        for row, row_data in df3.iterrows():
+            for col, (value, width) in enumerate(zip(row_data, column_widths)):
+                label = Label(self.output_frame, text=str(value), width=width)
+                label.grid(row=row + 2, column=col, padx=5, pady=5, sticky="nsew")
+                self.widgets_list.append(label)
+
 
     def other_graphs(self, option):
         if option == "fd_date":
