@@ -2,11 +2,13 @@ import pandas as pd
 import db_communication
 from datetime import datetime as dt
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import tkinter as tk
 
 #graphs
 
 #flying time per day and per flight number
-def date_flightTime(date):
+def date_flightTime(frame, date):
     connection = db_communication.connect_to_database()
     sql = "SELECT FN, fd FROM basics WHERE DATE(GPSdt) = %s"
     
@@ -14,24 +16,28 @@ def date_flightTime(date):
     
     df['fd_minutes'] = df['fd'].dt.total_seconds() / 60
     
-    #bar chart
-    plt.bar(df['FN'], df['fd_minutes'], color='blue')
-    plt.title('Flight Time per flight on {date}')
-    plt.xlabel('Flight Number')
-    plt.ylabel('Flight Time (minutes)')
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.bar(df['FN'], df['fd_minutes'], color='blue')
+    ax.set_title(f'Flight Time per flight on {date}')
+    ax.set_xlabel('Flight Number')
+    ax.set_ylabel('Flight Time (minutes)')
 
     # Round FN values and set them as x-axis ticks
-    plt.xticks(df['FN'].round(), df['FN'].round())
+    ax.set_xticks(df['FN'].round())
+    ax.set_xticklabels(df['FN'].round())
 
     # Add fd_minutes values on top of each bar
     for index, value in enumerate(df['fd_minutes']):
-        plt.text(df['FN'].iloc[index], value + 0.1, str(round(value, 2)), ha='center', va='bottom')
+        ax.text(df['FN'].iloc[index], value + 0.1, str(round(value, 2)), ha='center', va='bottom')
 
-    plt.show()
-    db_communication.close_connection(connection)
+    canvas = FigureCanvasTkAgg(fig, master=frame)
+    canvas_widget = canvas.get_tk_widget()
+    canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    canvas.draw()
+    db_communication.close_connection(connection[1])
 
 #flight time per day all flights in one day together
-def time_per_day(date_from, date_to):
+def time_per_day(frame, date_from, date_to):
     connection = db_communication.connect_to_database()
     sql = "SELECT FN, fd, GPSdt FROM basics WHERE DATE(GPSdt) BETWEEN %s AND %s"
     
@@ -42,25 +48,28 @@ def time_per_day(date_from, date_to):
     
     grouped_df = df.groupby(df['GPSdt'].dt.date)['fd_minutes'].sum().reset_index()
 
-    plt.figure(figsize=(12, 6))  # Adjust the figure size as needed
-    bars = plt.bar(grouped_df['GPSdt'].astype(str), grouped_df['fd_minutes'])
-    
+    fig, ax = plt.subplots(figsize=(12, 6))  # Adjust the figure size as needed
+    bars = ax.bar(grouped_df['GPSdt'].astype(str), grouped_df['fd_minutes'])
+
     # Annotate each bar with its value
     for bar in bars:
         yval = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width() / 2, yval + 0.1, round(yval, 2), ha='center', va='bottom')
+        ax.text(bar.get_x() + bar.get_width() / 2, yval + 0.1, round(yval, 2), ha='center', va='bottom')
 
-    plt.xlabel('')
-    plt.ylabel('Minutes per day')
-    plt.title('Total Minutes per Day')
-    plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
+    ax.set_xlabel('')
+    ax.set_ylabel('Minutes per day')
+    ax.set_title('Total Minutes per Day')
+    ax.tick_params(axis='x', rotation=45, ha='right')  # Rotate x-axis labels for better readability
     plt.tight_layout()
-    plt.show()
-    
-    db_communication.close_connection(connection)
+
+    canvas = FigureCanvasTkAgg(fig, master=frame)
+    canvas_widget = canvas.get_tk_widget()
+    canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    canvas.draw()
+    db_communication.close_connection(connection[1])
 
 #def engineCyc_fn(fn_from, fn_to):
-def engineCyc_fn(fn_from, fn_to):
+def engineCyc_fn(frame, fn_from, fn_to):
     
     connection = db_communication.connect_to_database()
 
@@ -69,7 +78,8 @@ def engineCyc_fn(fn_from, fn_to):
     df = pd.read_sql(sql, connection[1], params=(fn_from, fn_to))
 
     # Plot the bar chart using Pandas
-    ax = df.plot(kind='bar', x='FN', y=['n1cycles', 'n2cycles'], width=0.8, position=0.5, figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(8, 6))
+    df.plot(kind='bar', x='FN', y=['n1cycles', 'n2cycles'], width=0.8, position=0.5, ax=ax)
 
     # Set labels and title
     ax.set_xlabel('Flight Numbers')
@@ -86,14 +96,16 @@ def engineCyc_fn(fn_from, fn_to):
     # Set y-axis ticks as floats
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.2f}'))
 
-    # Show the plot
-    plt.show()
+    canvas = FigureCanvasTkAgg(fig, master=frame)
+    canvas_widget = canvas.get_tk_widget()
+    canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    canvas.draw()
 
     # Close the database connection
-    connection[1].close()
+    db_communication.close_connection(connection[1])
 
 #maximum engineCyc values per day (n1 & n2)
-def engineCyc_date(date_from, date_to):
+def engineCyc_date(frame, date_from, date_to):
     connection = db_communication.connect_to_database()
 
     sql = "SELECT FN, n1cycles, n2cycles, GPSdt FROM basics WHERE DATE(GPSdt) BETWEEN %s AND %s"
@@ -108,28 +120,34 @@ def engineCyc_date(date_from, date_to):
     df_max = df_max[df_max['date'].isin(existing_dates)]
 
     # Plotting the line chart
-    plt.plot(df_max['date'], df_max['n1cycles'], marker='o', linestyle='-')
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(df_max['date'], df_max['n1cycles'], marker='o', linestyle='-', label='n1cycles')
     for i, txt in enumerate(df_max['n1cycles']):
-        plt.annotate(txt, (df_max['date'].iloc[i], df_max['n1cycles'].iloc[i]), textcoords="offset points", xytext=(10,5), ha='center')
-    plt.plot(df_max['date'], df_max['n2cycles'], marker='o', linestyle='-', label='n2cycles')
+        ax.annotate(txt, (df_max['date'].iloc[i], df_max['n1cycles'].iloc[i]), textcoords="offset points", xytext=(10, 5), ha='center')
+    ax.plot(df_max['date'], df_max['n2cycles'], marker='o', linestyle='-', label='n2cycles')
     for i, txt in enumerate(df_max['n2cycles']):
-        plt.annotate(txt, (df_max['date'].iloc[i], df_max['n2cycles'].iloc[i]), textcoords="offset points", xytext=(10, -10), ha='center')
+        ax.annotate(txt, (df_max['date'].iloc[i], df_max['n2cycles'].iloc[i]), textcoords="offset points", xytext=(10, -10), ha='center')
 
     # Formatting the plot
-    plt.xlabel('Date')
-    plt.ylabel('Maximum Cycles')
-    plt.title('Maximum Cycles over dates')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Maximum Cycles')
+    ax.set_title('Maximum Cycles over Dates')
 
     # Set x-axis ticks & grid only for existing dates
-    plt.xticks(existing_dates, rotation=45, ha='right')
-    plt.grid(True, linestyle='--', which='major', color='grey', alpha=0.5, axis='x')
+    ax.set_xticks(existing_dates)
+    ax.tick_params(axis='x', rotation=45, ha='right')
+    ax.grid(True, linestyle='--', which='major', color='grey', alpha=0.5, axis='x')
 
-    plt.show()
-    
+    ax.legend()  # Show legend
+
+    canvas = FigureCanvasTkAgg(fig, master=frame)
+    canvas_widget = canvas.get_tk_widget()
+    canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    canvas.draw()
     db_communication.close_connection(connection[1])
 
 #the overlimits per flight --> flightnmb_from to flightnmb_to
-def overlimits_flight(fn_from, fn_to):
+def overlimits_flight(frame, fn_from, fn_to):
     connection = db_communication.connect_to_database()
 
     sql = "SELECT FN, NRol, TRQol, Engol FROM basics WHERE FN BETWEEN %s AND %s"
@@ -142,19 +160,22 @@ def overlimits_flight(fn_from, fn_to):
         # Calculate the sum of 'NRol', 'TRQol', and 'Engol' for each flight
         df['Overlimits'] = df[['NRol', 'TRQol', 'Engol']].sum(axis=1)
 
-        # Plotting the data with only existing flight numbers on the x-axis
-        plt.figure(figsize=(10, 6))
-        plt.bar(df['FN'], df['Overlimits'])
-        plt.xticks(df['FN'])  # Set x-axis ticks to only existing flight numbers
-        plt.xlabel('Flight Number (FN)')
-        plt.ylabel('Sum of Overlimits')
-        plt.title('Overlimits during Flight')
-        plt.show()
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.bar(df['FN'], df['Overlimits'])
+        ax.set_xticks(df['FN'])  # Set x-axis ticks to only existing flight numbers
+        ax.set_xlabel('Flight Number (FN)')
+        ax.set_ylabel('Sum of Overlimits')
+        ax.set_title('Overlimits during Flight')
+
+        canvas = FigureCanvasTkAgg(fig, master=frame)
+        canvas_widget = canvas.get_tk_widget()
+        canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        canvas.draw()
     
     db_communication.close_connection(connection[1])
 
 #the overlimits per flight --> date_from to date_to
-def overlimits_date (date_from, date_to):
+def overlimits_date (frame, date_from, date_to):
     connection = db_communication.connect_to_database()
 
     sql = "SELECT FN, NRol, TRQol, Engol FROM basics WHERE DATE(GPSdt) BETWEEN %s AND %s"
@@ -167,20 +188,24 @@ def overlimits_date (date_from, date_to):
         # Calculate the sum of 'NRol', 'TRQol', and 'Engol' for each flight
         df['Overlimits'] = df[['NRol', 'TRQol', 'Engol']].sum(axis=1)
 
-        title= date_from + " to " + date_to
+        title = f"{date_from} to {date_to}"
         # Plotting the data with only existing flight numbers on the x-axis
-        plt.figure(figsize=(10, 6))
-        plt.bar(df['FN'], df['Overlimits'])
-        plt.xticks(df['FN'])  # Set x-axis ticks to only existing flight numbers
-        plt.xlabel(title)
-        plt.ylabel('Sum of Overlimits')
-        plt.title('Overlimits during Flight')
-        plt.show()
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.bar(df['FN'], df['Overlimits'])
+        ax.set_xticks(df['FN'])  # Set x-axis ticks to only existing flight numbers
+        ax.set_xlabel(title)
+        ax.set_ylabel('Sum of Overlimits')
+        ax.set_title('Overlimits during Flight')
+
+        canvas = FigureCanvasTkAgg(fig, master=frame)
+        canvas_widget = canvas.get_tk_widget()
+        canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        canvas.draw()
     
     db_communication.close_connection(connection[1])
 
 #error occurrences in flight from fn_from to fn_to
-def error_fn(fn_from, fn_to):
+def error_fn(frame, fn_from, fn_to):
     connection = db_communication.connect_to_database()
 
     all_flight_numbers = pd.DataFrame({'FN': range(int(fn_from), int(fn_to)+1)})
@@ -197,24 +222,27 @@ def error_fn(fn_from, fn_to):
         merged_df = all_flight_numbers.merge(df, on='FN', how='left').fillna(0)
 
     # Plotting the graph with formatting adjustments
-    plt.figure(figsize=(10, 6))
-    plt.bar(merged_df['FN'], merged_df['occr'])
-    plt.xlabel('Flight Number (FN)')
-    plt.ylabel('Number of Occurrences (occr)')
-    plt.title('Occurrences of Errors per Flight Number')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(merged_df['FN'], merged_df['occr'])
+    ax.set_xlabel('Flight Number (FN)')
+    ax.set_ylabel('Number of Occurrences (occr)')
+    ax.set_title('Occurrences of Errors per Flight Number')
 
     # Format y-axis to display only integer values
-    plt.gca().yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+    ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 
     # Set x-axis ticks for all flight numbers
-    plt.xticks(merged_df['FN'], rotation=45)
+    ax.set_xticks(merged_df['FN'])
+    ax.tick_params(axis='x', rotation=45)
 
-    plt.show()
-
+    canvas = FigureCanvasTkAgg(fig, master=frame)
+    canvas_widget = canvas.get_tk_widget()
+    canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    canvas.draw()
     db_communication.close_connection(connection[1])
 
 #error occurrences from date_from to date_to per day --> update later for monthly/yearly number !
-def error_dates(date_from, date_to):
+def error_dates(frame, date_from, date_to):
     connection = db_communication.connect_to_database()
     sql1 = "SELECT FN, GPSdt FROM basics WHERE DATE(GPSdt) BETWEEN %s AND %s"
     df1 = pd.read_sql(sql1, connection[1], params=(date_from, date_to))
@@ -240,14 +268,19 @@ def error_dates(date_from, date_to):
     result_df = pd.merge(date_range_df, merged_df.groupby('date')['occr'].sum().reset_index(), how='left', on='date')
     result_df['occr'] = result_df['occr'].fillna(0).astype(int)
 
-    plt.bar(result_df['date'], result_df['occr'])
-    plt.xlabel('Date')
-    plt.ylabel('Number of error occurrences')
-    plt.title('Occurrences of errors by Date')
-    plt.xticks(result_df['date'], rotation=90)
-    plt.yticks(range(int(result_df['occr'].max()) + 1))
-    
-    plt.show()
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(result_df['date'], result_df['occr'])
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Number of error occurrences')
+    ax.set_title('Occurrences of errors by Date')
+    ax.set_xticks(result_df['date'])
+    ax.set_xticklabels(result_df['date'], rotation=90)
+    ax.set_yticks(range(int(result_df['occr'].max()) + 1))
+
+    canvas = FigureCanvasTkAgg(fig, master=frame)
+    canvas_widget = canvas.get_tk_widget()
+    canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    canvas.draw()
 
 #outputs
 
@@ -268,8 +301,6 @@ def error_date_output(date):
     error_counts = merged_df['failCode'].value_counts().reset_index()
     error_counts.columns = ['failCode', 'count']
     unique_failcodes = merged_df['failCode'].unique()
-    print(unique_failcodes)
-    print(num_rows)
     
     connection = db_communication.connect_to_database()
     sql3 = f"SELECT code, name, descr FROM failure WHERE code IN ({', '.join(map(str, unique_failcodes))})"
