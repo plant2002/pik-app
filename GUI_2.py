@@ -220,6 +220,7 @@ class analysisGUI:
         self.current_option = "Basics"
         self.content_frame = Frame(self.canvas, bg="#D9D9D9")
         self.content_frame.place(x=601.0, y=117.0, width=399.0, height=240.0)
+        self.widgets_list = []
         self.change_canvas(self.current_option)
 
         image_1 = self.canvas.create_image(
@@ -271,9 +272,10 @@ class analysisGUI:
         self.canvas.place(x=0, y=0)
     
     def change_canvas(self, option):
-        for widget in self.content_frame.winfo_children():
+        for widget in self.widgets_list:
             widget.destroy()
-        
+
+        self.widgets_list = []
         canvas = Canvas(self.content_frame, bg="#D9D9D9", width=399.0, height=240.0)
         canvas.pack(fill="both", expand=True)
         
@@ -323,6 +325,8 @@ class analysisGUI:
                 width=165.0,
                 height=50.0
             )
+            self.widgets_list.extend([button_2, button_3, canvas])
+        #failures
         if option == "Failures":
 
             canvas.create_text(
@@ -347,7 +351,7 @@ class analysisGUI:
                 image=analysis_failures_button2,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda: print("button_2 clicked"),
+                command=lambda: self.change_canvas("AnalysisFailOutput"),
                 relief="flat"
             )
             button_2.place(
@@ -361,7 +365,7 @@ class analysisGUI:
                 image=analysis_failures_button3,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda: print("button_3 clicked"),
+                command=lambda: self.change_canvas("AnalysisFailGraph"),
                 relief="flat"
             )
             button_3.place(
@@ -370,6 +374,8 @@ class analysisGUI:
                 width=165.0,
                 height=50.0
             )
+            self.widgets_list.extend([button_2, button_3, canvas])
+        #other
         elif option == "Other":
             canvas.create_rectangle(
                 601.0,
@@ -401,7 +407,7 @@ class analysisGUI:
                 image=analysis_other_button2,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda: print("button_2 clicked"),
+                command=lambda: self.change_canvas("AnalysisOtherExport"),
                 relief="flat"
             )
             button_2.place(
@@ -415,7 +421,7 @@ class analysisGUI:
                 image=analysis_other_button3,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda: print("button_3 clicked"),
+                command=lambda: self.change_canvas("AnalysisOtherGraph"),
                 relief="flat"
             )
             button_3.place(
@@ -424,6 +430,76 @@ class analysisGUI:
                 width=165.0,
                 height=50.0
             )
+            self.widgets_list.extend([button_2, button_3, canvas])
+            
+        if option == "AnalysisFailGraph":
+            canvas.create_rectangle(
+                601.0,
+                117.0,
+                1000.0,
+                358.0,
+                fill="#D9D9D9",
+                outline="")
+            canvas.create_text(
+                149.0,
+                13.0,
+                anchor="nw",
+                text="FAILURES - GRAPHS",
+                fill="#C43746",
+                font=("InriaSans Regular", 16 * -1)
+            )
+            self.widgets_list.extend([canvas])
+        if option == "AnalysisOtherGraph":
+            canvas.create_rectangle(
+                601.0,
+                117.0,
+                1000.0,
+                358.0,
+                fill="#D9D9D9",
+                outline="")
+            canvas.create_text(
+                149.0,
+                13.0,
+                anchor="nw",
+                text="OTHER - GRAPHS",
+                fill="#C43746",
+                font=("InriaSans Regular", 16 * -1))
+            self.widgets_list.extend([canvas])
+            
+        if option == "AnalysisOtherExport":
+            canvas.create_rectangle(
+                601.0,
+                117.0,
+                1000.0,
+                358.0,
+                fill="#D9D9D9",
+                outline="")
+            canvas.create_text(
+                149.0,
+                13.0,
+                anchor="nw",
+                text="OTHER - EXPORT",
+                fill="#C43746",
+                font=("InriaSans Regular", 16 * -1))
+            self.widgets_list.extend([canvas])
+
+        if option == "AnalysisFailOutput":
+            canvas.create_rectangle(
+                601.0,
+                117.0,
+                1000.0,
+                358.0,
+                fill="#D9D9D9",
+                outline="")
+            canvas.create_text(
+                149.0,
+                13.0,
+                anchor="nw",
+                text="OTHER - OUTPUTS",
+                fill="#C43746",
+                font=("InriaSans Regular", 16 * -1))
+            self.widgets_list.extend([canvas])
+        
         canvas.place(x=0, y=0)
         
     def destroy(self):
