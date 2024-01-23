@@ -22,6 +22,14 @@ analysisimage_image_1 = PhotoImage(file= "C:/Users/krist/OneDrive/Desktop/Report
 analysisbutton_image_1 = PhotoImage(file= "C:/Users/krist/OneDrive/Desktop/Report/GUI/analysis/analysis_images/button_1.png")
 analysisbutton_image_2 = PhotoImage(file= "C:/Users/krist/OneDrive/Desktop/Report/GUI/analysis/analysis_images/button_2.png")
 analysisbutton_image_3 = PhotoImage(file= "C:/Users/krist/OneDrive/Desktop/Report/GUI/analysis/analysis_images/button_3.png")
+analysis_failures_image1 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/GUI_additional/analysis_failures/image_1.png")
+analysis_failures_button1 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/GUI_additional/analysis_failures/button_1.png")
+analysis_failures_button2 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/GUI_additional/analysis_failures/button_2.png")
+analysis_failures_button3 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/GUI_additional/analysis_failures/button_3.png")
+analysis_other_image1 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/GUI_additional/analysis_others/image_1.png")
+analysis_other_button1 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/GUI_additional/analysis_others/button_1.png")
+analysis_other_button2 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/GUI_additional/analysis_others/button_2.png")
+analysis_other_button3 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/GUI_additional/analysis_others/button_3.png")
 
 reimportimage_image_1 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/reimport/reimport_images/image_1.png")
 reimportimage_image_2 = PhotoImage(file = "C:/Users/krist/OneDrive/Desktop/Report/GUI/reimport/reimport_images/image_2.png")
@@ -64,12 +72,11 @@ class DragDrop(tk.Canvas):
                         print(f"Error copying file: {e}")
                 else:
                     print(f"Skipped non-.csv file: {file_path}")
-            
-            if frames['current'] == frames['start']:
+            if isinstance(frames['current'], startGUI):
                 for file_path in files:
                     folder_path = 'C:/Users/krist/OneDrive/Desktop/Report/uploads'
-                read_files.read_files_in_folder(folder_path)
-            elif frames['current'] == frames['reimport']:
+                    read_files.read_files_in_folder(folder_path)
+            if isinstance(frames['current'], reimportGUI):
                 for file_path in files:
                     folder_path = 'C:/Users/krist/OneDrive/Desktop/Report/uploads'
 
@@ -210,6 +217,10 @@ class analysisGUI:
             relief="ridge"
         )
         self.canvas.pack(fill="both", expand=True)
+        self.current_option = "Basics"
+        self.content_frame = Frame(self.canvas, bg="#D9D9D9")
+        self.content_frame.place(x=601.0, y=117.0, width=399.0, height=240.0)
+        self.change_canvas(self.current_option)
 
         image_1 = self.canvas.create_image(
             804.0,
@@ -256,61 +267,165 @@ class analysisGUI:
             fill="#D9D9D9",
             outline="")
 
-        self.canvas.create_rectangle(
-            601.0,
-            117.0,
-            1000.0,
-            358.0,
-            fill="#D9D9D9",
-            outline="")
-
-        self.canvas.create_text(
-            644.0,
-            125.0,
+        
+        self.canvas.place(x=0, y=0)
+    
+    def change_canvas(self, option):
+        for widget in self.content_frame.winfo_children():
+            widget.destroy()
+        
+        canvas = Canvas(self.content_frame, bg="#D9D9D9", width=399.0, height=240.0)
+        canvas.pack(fill="both", expand=True)
+        
+        if option == "Basics":
+            canvas.create_text(
+            150.0,
+            8.0,
             anchor="nw",
             text="ANALYSIS TOOLS",
             fill="#C43746",
             font=("InriaSans Regular", 16 * -1)
-        )
+            )
 
-        self.canvas.create_text(
-            633.0,
-            161.0,
-            anchor="nw",
-            text="Please choose if you want to check Failures or other\n things you want to analyse.",
-            fill="#000000",
-            font=("InriaSans Regular", 15 * -1)
-        )
+            canvas.create_text(
+                40.0,
+                44.0,
+                anchor="nw",
+                text="Please choose if you want to check Failures or other\n things you want to analyse.",
+                fill="#000000",
+                font=("InriaSans Regular", 15 * -1)
+            )
 
-        button_2 = Button(
-            image=analysisbutton_image_2,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_2 clicked"),
-            relief="flat"
-        )
-        button_2.place(
-            x=823.0,
-            y=259.0,
-            width=165.0,
-            height=50.0
-        )
+            button_2 = Button(
+                image=analysisbutton_image_2,
+                borderwidth=0,
+                highlightthickness=0,
+                command=lambda: self.change_canvas("Other"),
+                relief="flat"
+            )
+            button_2.place(
+                x=823.0,
+                y=259.0,
+                width=165.0,
+                height=50.0
+            )
 
-        button_3 = Button(
-            image=analysisbutton_image_3,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_3 clicked"),
-            relief="flat"
-        )
-        button_3.place(
-            x=636.0,
-            y=259.0,
-            width=165.0,
-            height=50.0
-        )
+            button_3 = Button(
+                image=analysisbutton_image_3,
+                borderwidth=0,
+                highlightthickness=0,
+                command=lambda: self.change_canvas("Failures"),
+                relief="flat"
+            )
+            button_3.place(
+                x=636.0,
+                y=259.0,
+                width=165.0,
+                height=50.0
+            )
+        if option == "Failures":
+
+            canvas.create_text(
+                149.0,
+                13.0,
+                anchor="nw",
+                text="FAILURES",
+                fill="#C43746",
+                font=("InriaSans Regular", 16 * -1)
+            )
+
+            canvas.create_text(
+                32.0,
+                44.0,
+                anchor="nw",
+                text="Choose if you want to see the graphs or outputs",
+                fill="#000000",
+                font=("InriaSans Regular", 15 * -1)
+            )
+
+            button_2 = Button(
+                image=analysis_failures_button2,
+                borderwidth=0,
+                highlightthickness=0,
+                command=lambda: print("button_2 clicked"),
+                relief="flat"
+            )
+            button_2.place(
+                x=823.0,
+                y=259.0,
+                width=165.0,
+                height=50.0
+            )
+
+            button_3 = Button(
+                image=analysis_failures_button3,
+                borderwidth=0,
+                highlightthickness=0,
+                command=lambda: print("button_3 clicked"),
+                relief="flat"
+            )
+            button_3.place(
+                x=636.0,
+                y=259.0,
+                width=165.0,
+                height=50.0
+            )
+        elif option == "Other":
+            canvas.create_rectangle(
+                601.0,
+                117.0,
+                1000.0,
+                358.0,
+                fill="#D9D9D9",
+                outline="")
+
+            canvas.create_text(
+                149.0,
+                13.0,
+                anchor="nw",
+                text="OTHER",
+                fill="#C43746",
+                font=("InriaSans Regular", 16 * -1)
+            )
+
+            canvas.create_text(
+                32.0,
+                44.0,
+                anchor="nw",
+                text="Choose if you want to see the graphs or export",
+                fill="#000000",
+                font=("InriaSans Regular", 15 * -1)
+            )
+
+            button_2 = Button(
+                image=analysis_other_button2,
+                borderwidth=0,
+                highlightthickness=0,
+                command=lambda: print("button_2 clicked"),
+                relief="flat"
+            )
+            button_2.place(
+                x=823.0,
+                y=259.0,
+                width=165.0,
+                height=50.0
+            )
+
+            button_3 = Button(
+                image=analysis_other_button3,
+                borderwidth=0,
+                highlightthickness=0,
+                command=lambda: print("button_3 clicked"),
+                relief="flat"
+            )
+            button_3.place(
+                x=636.0,
+                y=259.0,
+                width=165.0,
+                height=50.0
+            )
+        canvas.place(x=0, y=0)
         
-        self.canvas.place(x=0, y=0)
     def destroy(self):
         self.frame.destroy()
 
