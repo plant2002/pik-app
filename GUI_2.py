@@ -749,6 +749,7 @@ class analysisGUI:
                 command=lambda: analysis_functions.error_code_data(self.selected_value),
                 relief="flat"
             )
+            go_button.place(x=950, y=300)
         if option == "error_code_flight":
             option_map = analysis_functions.errors_code_selection()
             selected_option = StringVar()
@@ -767,9 +768,33 @@ class analysisGUI:
             # Add a "Go" button
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.error_code_flight(self.selected_value),
+                command=lambda: self.display_error_flight_output(self.selected_value),
                 relief="flat"
             )
+            go_button.place(x=950, y=300)
+
+    def display_error_flight_output(self, code):
+        if self.result_label:
+            self.result_label.destroy()
+
+        # Call the analysis function to get the result
+        df3 = analysis_functions.error_code_flight(code)
+
+        # Define column widths
+        column_widths = [10, 30, 20]  # You can adjust these values as needed
+
+        # Display column names for the DataFrame
+        for col, (col_name, width) in enumerate(zip(df3.columns, column_widths)):
+            label = Label(self.output_frame, text=col_name, relief=tk.RIDGE, width=width)
+            label.grid(row=1, column=col, padx=5, pady=5, sticky="nsew")
+            self.widgets_list.append(label)
+
+        # Display data from the DataFrame
+        for row, row_data in df3.iterrows():
+            for col, (value, width) in enumerate(zip(row_data, column_widths)):
+                label = Label(self.output_frame, text=str(value), width=width)
+                label.grid(row=row + 2, column=col, padx=5, pady=5, sticky="nsew")
+                self.widgets_list.append(label)
 
     def display_error_date_output(self, data):
         if self.result_label:
@@ -801,10 +826,6 @@ class analysisGUI:
         if self.result_label:
             self.result_label.destroy()
 
-        # Destroy other widgets if needed
-        for widget in self.widgets_list:
-            widget.destroy()
-
         # Call the analysis function to get the result
         result_string, df3 = analysis_functions.error_dates_output(data_from, data_to)
 
@@ -828,7 +849,6 @@ class analysisGUI:
                 label = Label(self.output_frame, text=str(value), width=width)
                 label.grid(row=row + 2, column=col, padx=5, pady=5, sticky="nsew")
                 self.widgets_list.append(label)
-
 
     def other_graphs(self, option):
         if option == "fd_date":
