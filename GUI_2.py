@@ -788,9 +788,39 @@ class analysisGUI:
             )
             go_button.place(x=950, y=300)
         if option == "engCyc_fn":
-            print("got to function")
+            entry_label = Label(self.canvas, text="From Flight:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="To flight:")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.engineCyc_fn(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
         if option == "engCyc_date":
-            print("got to function")
+            entry_label = Label(self.canvas, text="From date:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="To date:")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.engineCyc_date(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
 
     def other_export(self, option):
         if option == "fn":
