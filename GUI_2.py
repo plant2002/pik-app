@@ -277,7 +277,7 @@ class analysisGUI:
 
         
         self.canvas.place(x=0, y=0)
-    
+
     def change_canvas(self, option):
         for widget in self.widgets_list:
             widget.destroy()
@@ -622,7 +622,7 @@ class analysisGUI:
             go_button.place(x=900, y=217)
 
             canvas.place(x=0, y=0)
-    
+
     def failure_graphs(self, option):
         for widget in self.widgets_list:
             widget.destroy()
@@ -639,7 +639,7 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.overlimits_flight(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: analysis_functions.overlimits_flight(self.output_frame, data_entry_from.get(), data_entry_to.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)          
@@ -656,7 +656,7 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.overlimits_date(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: analysis_functions.overlimits_date(self.output_frame, data_entry_from.get(), data_entry_to.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)
@@ -673,7 +673,7 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.error_fn(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: analysis_functions.error_fn(self.output_frame, data_entry_from.get(), data_entry_to.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)
@@ -690,11 +690,10 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.error_dates(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: analysis_functions.error_dates(self.output_frame, data_entry_from.get(), data_entry_to.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)
-            
 
 #have to correct this here!!!!!!
     def failure_outputs(self, option):
@@ -822,6 +821,7 @@ class analysisGUI:
                 label.grid(row=row + 2, column=col, padx=5, pady=5, sticky="nsew")
                 self.widgets_list.append(label)
 
+#everything works but the cleaning up is a bit iffy and a bit unpredictable. sometimes it works sometimes not
     def display_error_dates_output(self, data_from, data_to):
         if self.result_label:
             self.result_label.destroy()
@@ -859,10 +859,11 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.date_flightTime(data_entry_from.get()),
+                command=lambda: analysis_functions.date_flightTime(self.output_frame, data_entry_from.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)
+            
         if option == "time_date":
             entry_label = Label(self.canvas, text="From date:")
             entry_label.place(x=650, y=270)
@@ -876,7 +877,7 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.time_per_day(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: analysis_functions.time_per_day(self.output_frame, data_entry_from.get(), data_entry_to.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)
@@ -893,7 +894,7 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.engineCyc_fn(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: analysis_functions.engineCyc_fn(self.output_frame, data_entry_from.get(), data_entry_to.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)
@@ -910,7 +911,7 @@ class analysisGUI:
             
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.engineCyc_date(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: analysis_functions.engineCyc_date(self.output_frame, data_entry_from.get(), data_entry_to.get()),
                 relief="flat"
             )
             go_button.place(x=950, y=300)
@@ -1011,6 +1012,7 @@ class analysisGUI:
             fill="#FFFFFF",
             font=("InriaSans Regular", 30 * -1)
         )
+    
     def destroy(self):
         self.frame.destroy()
 
