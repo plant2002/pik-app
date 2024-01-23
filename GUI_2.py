@@ -457,7 +457,7 @@ class analysisGUI:
                 "Graphs of overlimits/flights" : "ovr_flight",
                 "Graphs of overlimits/dates" : "ovr_date",
                 "Graphs of occurrences of errors/flights" : "errorfn_occr",
-                "Graphs of errors/dates" : "error_date",
+                "Graphs of errors/dates" : "error_dates",
             }
             
             selected_option = StringVar()
@@ -640,11 +640,57 @@ class analysisGUI:
             go_button.place(x=950, y=300)
             
         if option == "ovr_date":
-            print("got to function")
+            entry_label = Label(self.canvas, text="Date from (Y-M-D):")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="Date to (Y-M-D):")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.overlimits_date(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
         if option == "errorfn_occr":
-            print("got to function")
-        if option == "error_date":
-            print("got to function")
+            entry_label = Label(self.canvas, text="From Flight Number:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="To Flight Number:")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.error_fn(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
+
+        if option == "error_dates":
+            entry_label = Label(self.canvas, text="Dates from (Y-M-D):")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="Dates to (Y-M-D):")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.error_dates(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
 
     def failure_outputs(self, option):
         if option == "error_date":
