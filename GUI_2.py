@@ -723,40 +723,47 @@ class analysisGUI:
             )
             go_button.place(x=950, y=300)
         if option == "error_code_data":
-#HERE
-            entry_label = Label(self.canvas, text="From Flight Number:")
-            entry_label.place(x=650, y=270)
-            data_entry_from = Entry(self.canvas)
-            data_entry_from.place(x=800, y=270)
-            
-            entry_label = Label(self.canvas, text="To Flight Number:")
-            entry_label.place(x=650, y=300)
-            data_entry_to = Entry(self.canvas)
-            data_entry_to.place(x=800, y=300)
-            
+            option_map = analysis_functions.errors_code_selection()
+            selected_option = StringVar()
+            selected_option.set(list(option_map.keys())[0])  # Set the default option
+            drop_down_menu = OptionMenu(self.canvas, selected_option, *option_map.keys())
+            drop_down_menu.place(x=750, y=270)  # Adjust the position as needed
+
+            def on_option_change(*args):
+                selected_display_text = selected_option.get()
+                self.selected_value = option_map.get(selected_display_text)
+                print(f"Selected option: {selected_display_text}, Value: {self.selected_value}")
+                # Now you can use 'selected_value' in your function
+
+            selected_option.trace_add("write", on_option_change)
+
+            # Add a "Go" button
             go_button = Button(
                 text="Go",
-                command=lambda: self.show_output(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: analysis_functions.error_code_data(self.selected_value),
                 relief="flat"
             )
-            go_button.place(x=950, y=300)
         if option == "error_code_flight":
-            entry_label = Label(self.canvas, text="From Flight Number:")
-            entry_label.place(x=650, y=270)
-            data_entry_from = Entry(self.canvas)
-            data_entry_from.place(x=800, y=270)
-            
-            entry_label = Label(self.canvas, text="To Flight Number:")
-            entry_label.place(x=650, y=300)
-            data_entry_to = Entry(self.canvas)
-            data_entry_to.place(x=800, y=300)
-            
+            option_map = analysis_functions.errors_code_selection()
+            selected_option = StringVar()
+            selected_option.set(list(option_map.keys())[0])  # Set the default option
+            drop_down_menu = OptionMenu(self.canvas, selected_option, *option_map.keys())
+            drop_down_menu.place(x=750, y=270)  # Adjust the position as needed
+
+            def on_option_change(*args):
+                selected_display_text = selected_option.get()
+                self.selected_value = option_map.get(selected_display_text)
+                print(f"Selected option: {selected_display_text}, Value: {self.selected_value}")
+                # Now you can use 'selected_value' in your function
+
+            selected_option.trace_add("write", on_option_change)
+
+            # Add a "Go" button
             go_button = Button(
                 text="Go",
-                command=lambda: analysis_functions.error_fn(data_entry_from.get(), data_entry_to.get()),
+                command=lambda: analysis_functions.error_code_flight(self.selected_value),
                 relief="flat"
             )
-            go_button.place(x=950, y=300)
 
     def other_graphs(self, option):
         if option == "fd_date":
