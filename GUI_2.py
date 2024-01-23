@@ -855,16 +855,27 @@ class analysisGUI:
             go_button.place(x=950, y=300)
 #here also check which errors we have in database and make a drop down menu!
         if option == "error":
-            entry_label = Label(self.canvas, text="error number:")
-            entry_label.place(x=650, y=270)
-            data_entry_from = Entry(self.canvas)
-            data_entry_from.place(x=800, y=270)
-            
+            option_map = analysis_functions.errors_code_selection()
+            selected_option = StringVar()
+            selected_option.set(list(option_map.keys())[0])  # Set the default option
+            drop_down_menu = OptionMenu(self.canvas, selected_option, *option_map.keys())
+            drop_down_menu.place(x=750, y=270)  # Adjust the position as needed
+
+            def on_option_change(*args):
+                selected_display_text = selected_option.get()
+                self.selected_value = option_map.get(selected_display_text)
+                print(f"Selected option: {selected_display_text}, Value: {self.selected_value}")
+                # Now you can use 'selected_value' in your function
+
+            selected_option.trace_add("write", on_option_change)
+
+            # Add a "Go" button
             go_button = Button(
                 text="Go",
-                command=lambda: export_csv.error_number(data_entry_from.get()),
+                command=lambda: export_csv.error_number(self.selected_value),
                 relief="flat"
             )
+            
 #here a problem if another one got chosen before... clean canvas!
             go_button.place(x=950, y=300)
         if option == "dates":
