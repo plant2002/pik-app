@@ -691,6 +691,7 @@ class analysisGUI:
             )
             go_button.place(x=950, y=300)
 
+#have to correct this here!!!!!!
     def failure_outputs(self, option):
         if option == "error_date":
             entry_label = Label(self.canvas, text="Error on date (Y-M-D):")
@@ -824,15 +825,77 @@ class analysisGUI:
 
     def other_export(self, option):
         if option == "fn":
-            print("got to function")
+            entry_label = Label(self.canvas, text="From Flight Number:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="To Flight Number:")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: export_csv.export_to_csv_fn_from_to(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
         if option == "fn_spec":
-            print("got to function")
+            entry_label = Label(self.canvas, text="flight number:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: export_csv.export_to_csv_fn(data_entry_from.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
+#here also check which errors we have in database and make a drop down menu!
         if option == "error":
-            print("got to function")
+            entry_label = Label(self.canvas, text="error number:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: export_csv.error_number(data_entry_from.get()),
+                relief="flat"
+            )
+#here a problem if another one got chosen before... clean canvas!
+            go_button.place(x=950, y=300)
         if option == "dates":
-            print("got to function")
+            entry_label = Label(self.canvas, text="From date:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="To date:")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: export_csv.export_fn_date_to_from(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
         if option == "date_spec":
-            print("got to function")
+            entry_label = Label(self.canvas, text="date:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: export_csv.export_fn_date_spec(data_entry_from.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
     
     def show_output(self, date_from, date_to):
         result_text = analysis_functions.error_dates_output(date_from, date_to)
