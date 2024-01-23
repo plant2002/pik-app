@@ -3,8 +3,10 @@
 TO DO:
 - [ ]	Make sure it's bulletproof (after presentation, such as that date_from is earlier than date_to, fn_from smaller than fn_to etc)
 - [x]	connect GUI to functions
-- [ ]	show graphs in GUI Analysis
+- [x]	show graphs in GUI Analysis
 - [x]	change GUI Analysis
+- [ ]	create a Jupyter notebook with analysis + export in it
+- [ ]	PowerPoint presentation
 
 Analysis: 
 - analysis of parameters according to:
