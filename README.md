@@ -15,7 +15,7 @@ Analysis:
 - [x]	Name (also show code when choosing so I killed two birds with one stone)
 - [x]	Occurrences
 - [x]	get the name, descr, code of errors happening on date or date_from/date_to
-- [ ]	calculate averages and find the ones that are above/below average and show them on a graph <h3>this should probably be left for after presentation though it's super important so idk</h3>
+- [ ]	calculate averages and find the ones that are above/below average and show them on a graph (function error_code_data, not working)<h3>this should probably be left for after presentation though it's super important so idk</h3>
 -	Graphs:
 - [x]	Duration of flights / date
 - [x]	Duration of flight/ flight number
