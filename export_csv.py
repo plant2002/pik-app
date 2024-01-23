@@ -74,9 +74,10 @@ def error_number(error):
     db_communication.close_connection(connection[1])
     
     fn=df2["FN"]
+    fn_values = tuple(fn)
     
     connection = db_communication.connect_to_database()
-    sql3 = f"SELECT FN, GPSdt, fd FROM basics WHERE FN IN ({', '.join(map(str, fn))})"
+    sql3 = "SELECT FN, GPSdt, fd FROM basics WHERE FN IN {}".format(str(fn_values))
     df3 = pd.read_sql(sql3, connection[1])
     db_communication.close_connection(connection[1])
     
