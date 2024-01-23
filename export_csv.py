@@ -39,7 +39,7 @@ def export_to_csv_fn(fn_spec):
     df2 = pd.read_sql(sql2, connection[1], params=(fn_spec, ))
     db_communication.close_connection(connection[1])
     
-    if 'failCode' in df2.columns:
+    if not df2.empty and 'failCode' in df2.columns:
         code = int(df2["failCode"].iloc[0])
         
         connection = db_communication.connect_to_database()
@@ -50,14 +50,14 @@ def export_to_csv_fn(fn_spec):
         result_df1 = pd.merge(df1, df2, on='FN', how='left')
         result_df = pd.merge(result_df1, df3, left_on='failCode', right_on='code', how='left')
     else:
-        result_df = pd.merge(df1, df2, df3, on='FN', how='left')
+        result_df = pd.merge(df1, df2, on='FN', how='left')
     
     # Ask user for the destination folder
     folder_selected = filedialog.askdirectory()
 
     if folder_selected:
         # Create CSV file
-        csv_file_path = f"{folder_selected}/flight{fn_spec}to.csv"
+        csv_file_path = f"{folder_selected}/flight{fn_spec}.csv"
         result_df.to_csv(csv_file_path, index=False)
 
         print(f"Data exported to: {csv_file_path}")
@@ -176,3 +176,4 @@ def export_fn_date_spec(date_specific):
         result_df.to_csv(csv_file_path, index= False)
 
         print(f"Data exported to: {csv_file_path}")
+
