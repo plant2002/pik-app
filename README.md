@@ -8,7 +8,6 @@ TO DO:
 
 Analysis: 
 - analysis of parameters according to:
-- [ ] Flight number (kinda useless so maybe not)
 - [x]	Flight duration (per day & per flight)
 - [x]	Engine cycles (2 graphs)
 - [x]	Overlimits
