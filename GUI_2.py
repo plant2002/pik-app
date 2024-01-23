@@ -780,11 +780,22 @@ class analysisGUI:
             widget.destroy()
 
         # Call the analysis function to get the result
-        result = analysis_functions.error_date_output(data)
+        df3 = analysis_functions.error_date_output(data)
+        # Define column widths
+        column_widths = [10, 20, 35]  # You can adjust these values as needed
 
-        # Create a label to display the result in the output_frame
-        self.result_label = Label(self.output_frame, text=result)
-        self.result_label.grid(column=0, columnspan=5, padx=20, pady=20, sticky="w")
+        # Display column names for the DataFrame
+        for col, (col_name, width) in enumerate(zip(df3.columns, column_widths)):
+            label = Label(self.output_frame, text=col_name, relief=tk.RIDGE, width=width)
+            label.grid(row=1, column=col, padx=5, pady=5, sticky="nsew")
+            self.widgets_list.append(label)
+
+        # Display data from the DataFrame
+        for row, row_data in df3.iterrows():
+            for col, (value, width) in enumerate(zip(row_data, column_widths)):
+                label = Label(self.output_frame, text=str(value), width=width)
+                label.grid(row=row + 2, column=col, padx=5, pady=5, sticky="nsew")
+                self.widgets_list.append(label)
 
     def display_error_dates_output(self, data_from, data_to):
         if self.result_label:
