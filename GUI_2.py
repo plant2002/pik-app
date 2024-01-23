@@ -673,7 +673,6 @@ class analysisGUI:
                 relief="flat"
             )
             go_button.place(x=950, y=300)
-
         if option == "error_dates":
             entry_label = Label(self.canvas, text="Dates from (Y-M-D):")
             entry_label.place(x=650, y=270)
@@ -694,19 +693,100 @@ class analysisGUI:
 
     def failure_outputs(self, option):
         if option == "error_date":
-            print("got to function")
+            entry_label = Label(self.canvas, text="Error on date (Y-M-D):")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.error_date_output(data_entry_from.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
         if option == "error_dates":
-            print("got to function")
+            entry_label = Label(self.canvas, text="From date (Y-M-D):")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="To date (Y-M-D):")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.error_dates_output(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
         if option == "error_code_data":
-            print("got to function")
+#HERE
+            entry_label = Label(self.canvas, text="From Flight Number:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="To Flight Number:")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: self.show_output(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
         if option == "error_code_flight":
-            print("got to function")
+            entry_label = Label(self.canvas, text="From Flight Number:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="To Flight Number:")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.error_fn(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
 
     def other_graphs(self, option):
         if option == "fd_date":
-            print("got to function")
+            entry_label = Label(self.canvas, text="Date (Y-M-D):")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.date_flightTime(data_entry_from.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
         if option == "time_date":
-            print("got to function")
+            entry_label = Label(self.canvas, text="From date:")
+            entry_label.place(x=650, y=270)
+            data_entry_from = Entry(self.canvas)
+            data_entry_from.place(x=800, y=270)
+            
+            entry_label = Label(self.canvas, text="To date:")
+            entry_label.place(x=650, y=300)
+            data_entry_to = Entry(self.canvas)
+            data_entry_to.place(x=800, y=300)
+            
+            go_button = Button(
+                text="Go",
+                command=lambda: analysis_functions.time_per_day(data_entry_from.get(), data_entry_to.get()),
+                relief="flat"
+            )
+            go_button.place(x=950, y=300)
         if option == "engCyc_fn":
             print("got to function")
         if option == "engCyc_date":
@@ -724,6 +804,17 @@ class analysisGUI:
         if option == "date_spec":
             print("got to function")
     
+    def show_output(self, date_from, date_to):
+        result_text = analysis_functions.error_dates_output(date_from, date_to)
+
+        self.canvas.create_text(
+            50,
+            130,
+            anchor="nw",
+            text=result_text,
+            fill="#FFFFFF",
+            font=("InriaSans Regular", 30 * -1)
+        )
     def destroy(self):
         self.frame.destroy()
 
@@ -855,7 +946,6 @@ def show_frame(page_name):
 
     # Update the current frame
     frames['current'] = frames[page_name](root, lambda page=page_name: show_frame(page))
-
 
 frames['current'] = frames['start'](root, lambda page='start': show_frame(page))
 
