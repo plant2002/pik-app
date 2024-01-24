@@ -5,8 +5,8 @@ TO DO:
 - [x]	connect GUI to functions
 - [x]	show graphs in GUI Analysis
 - [x]	change GUI Analysis
-- [ ]	create a Jupyter notebook with analysis + export in it
-- [ ]	PowerPoint presentation
+- [x]	create a Jupyter notebook with analysis + export in it
+- [x]	PowerPoint presentation
 
 Analysis: 
 - analysis of parameters according to:
