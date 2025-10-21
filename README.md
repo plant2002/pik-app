@@ -8,6 +8,10 @@ TO DO:
 - [x]	change GUI Analysis
 - [x]	create a Jupyter notebook with analysis + export in it
 - [x]	PowerPoint presentation
+- [x]	added client, company, helicopter tables to database
+- [ ]	client login/register
+- [ ]	company login/register
+- [ ]	add new helicopter GUI + queries
 
 Analysis: 
 - analysis of parameters according to:
