@@ -1,0 +1,37 @@
+Aircraft type;350B2 ;
+Aircraft name;;
+Aircraft S/N;7137 ;
+Flight Number ;2601 ;
+Mode ;Normal mode ;
+
+
+Flight Report
+;
+
+;Flight Time
+;;L Module value;R Module Value;Acknowledged Value;
+;GPS Date Time;9/3/2023 8:12:30 AM ;9/3/2023 8:12:30 AM ;9/3/2023 8:12:30 AM ;
+;VEMD Flight Duration;00:20:00 ;00:20:00 ;
+;GPS Flight Duration;00:20:00 ;00:20:00 ;
+;Flight Duration;;;00:20:00 ;
+;
+
+;Engine cycles
+;;L Module value;R Module Value;Acknowledged Value;
+;N1 (NG) Cycles;1.21 ;1.20 ;1.21 ;
+;N2 (NF) Cycles;1.00 ;1.00 ;1.00 ;
+
+
+OverLimits
+;
+
+;NR overlimits
+;;L Module value;R Module Value;Acknowledged Value;
+;
+
+;TRQ (TQ) overlimits
+;;L Module value;R Module Value;Acknowledged Value;
+;
+
+;Engine overlimits
+;;L Module value;R Module Value;Acknowledged Value;

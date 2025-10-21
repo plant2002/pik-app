@@ -1,0 +1,68 @@
+Aircraft type;350B2 ;
+Aircraft name;;
+Aircraft S/N;7137 ;
+Flight Number ;2614 ;
+Mode ;Normal mode ;
+
+
+Flight Report
+;
+
+;Flight Time
+;;L Module value;R Module Value;Acknowledged Value;
+;GPS Date Time;9/10/2023 11:25:06 AM ;9/10/2023 11:25:06 AM ;9/10/2023 11:25:06 AM ;
+;VEMD Flight Duration;00:19:00 ;00:19:00 ;
+;GPS Flight Duration;00:20:00 ;00:20:00 ;
+;Flight Duration;;;00:19:00 ;
+;
+
+;Engine cycles
+;;L Module value;R Module Value;Acknowledged Value;
+;N1 (NG) Cycles;1.25 ;1.25 ;1.25 ;
+;N2 (NF) Cycles;1.00 ;1.00 ;1.00 ;
+
+
+OverLimits
+;
+
+;NR overlimits
+;;L Module value;R Module Value;Acknowledged Value;
+;
+
+;TRQ (TQ) overlimits
+;;L Module value;R Module Value;Acknowledged Value;
+;
+
+;Engine overlimits
+;;L Module value;R Module Value;Acknowledged Value;
+
+
+Failures
+;
+
+;Failure 1/1
+;Code;103 ;
+;Name;FLI LOSS ;
+;Description;CONSULT MAINTENANCE MANUAL ;
+;;L Module value;R Module Value;
+;Occurrences;4 ;4 ;
+;Start Time;00:03:32 ;00:03:32 ;
+;Duration;Permanent ;Permanent ;
+;
+
+;Context
+;;Before L Module Value;L Module value;Before R Module Value;R Module Value;
+;N1 (NG):;97.6 %;97.7 %;97.6 %;97.7 %;
+;NR:;390 rpm;390 rpm;390 rpm;389 rpm;
+;N2 (NF):;388 rpm;388 rpm;389 rpm;389 rpm;
+;T4a:;0.0 °C;0.0 °C;0.0 °C;0.0 °C;
+;T4b:;0.0 °C;0.0 °C;0.0 °C;0.0 °C;
+;OAT:;21.0 °C;20.9 °C;21.1 °C;21.0 °C;
+;TOT (T4):;756 °C;756 °C;754 °C;755 °C;
+;TRQ (TQ):;74.0 %;74.2 %;74.0 %;74.2 %;
+;P0:;887.5 mbar;886.9 mbar;887.6 mbar;887.4 mbar;
+;GENC:;14 A;14 A;14 A;14 A;
+;BUSV:;28.4 V;28.4 V;28.4 V;28.4 V;
+;STARTC:;0 A;0 A;0 A;0 A;
+;H/P2_ASF_P/ASF_M/BLDVAL:;0/0/0/0 ;0/0/0/0 ;0/0/0/0 ;0/0/0/0 ;
+;;;;;
