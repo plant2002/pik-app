@@ -1,5 +1,5 @@
 <h1>Pik-App</h1>
-
+<h1> FURTHER WORK ON THIS REPOSITORY HAS BEEN MIGRATED TO THE NEW DEPOSITORY ~PIKAPP~</h1>
 TO DO:
 - [ ]	Make sure it's bulletproof (after presentation, such as that date_from is earlier than date_to, fn_from smaller than fn_to etc)
 - [ ]	get the code cleaned up
